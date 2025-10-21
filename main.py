@@ -23,6 +23,7 @@ if sys.platform.startswith("win"):
 from preprocess.extract_text import parse_pdf_to_markdown
 from preprocess.pre_process import preprocess_text_for_summarization, download_nltk_data
 from summarization.summery import summarize_text
+from Translation.english_to_sinhala import translate_en_to_si
 
 app = FastAPI(title="NLP Tool API", version="1.0.0")
 
@@ -63,12 +64,21 @@ async def process_pdf(file: UploadFile = File(...)):
         summary = await run_in_threadpool(summarize_text, cleaned_text, 2)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to summarize text: {e}")
+    
+    try:
+        print("Translating summary to Sinhala...")
+        sinhala_summary = await run_in_threadpool(translate_en_to_si, summary)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to translate text: {e}")
 
     print("\nFinal Cleaned Text")
     print(cleaned_text)
 
     print("\nSummary")
     print(summary)
+
+    print("\nSinhala Summary")
+    print(sinhala_summary)
 
     
     return {
