@@ -22,6 +22,7 @@ if sys.platform.startswith("win"):
 
 from preprocess.extract_text import parse_pdf_to_markdown
 from preprocess.pre_process import preprocess_text_for_summarization, download_nltk_data
+from summarization.summery import summarize_text
 
 app = FastAPI(title="NLP Tool API", version="1.0.0")
 
@@ -58,13 +59,23 @@ async def process_pdf(file: UploadFile = File(...)):
     print("Pre-processing the extracted text...")
     cleaned_text = preprocess_text_for_summarization(markdown_text)
 
+    try:
+        summary = await run_in_threadpool(summarize_text, cleaned_text, 2)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to summarize text: {e}")
+
     print("\nFinal Cleaned Text")
     print(cleaned_text)
+
+    print("\nSummary")
+    print(summary)
+
     
     return {
         "status": "ok",
         "filename": file.filename,
         "original_chars": len(markdown_text),
         "cleaned_chars": len(cleaned_text),
-        "cleaned_text_preview": cleaned_text[:500] + "..." if len(cleaned_text) > 500 else cleaned_text
+        "cleaned_text_preview": cleaned_text[:500] + "..." if len(cleaned_text) > 500 else cleaned_text,
+        "summary": summary
     }
