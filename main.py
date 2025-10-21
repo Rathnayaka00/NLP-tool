@@ -87,5 +87,6 @@ async def process_pdf(file: UploadFile = File(...)):
         "original_chars": len(markdown_text),
         "cleaned_chars": len(cleaned_text),
         "cleaned_text_preview": cleaned_text[:500] + "..." if len(cleaned_text) > 500 else cleaned_text,
-        "summary": summary
+        "summary": summary,
+        "sinhala_summary": sinhala_summary
     }
