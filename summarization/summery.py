@@ -58,7 +58,7 @@ def summarize_text(text: str, num_sentences: int = 5) -> str:
         # Clean text
         clean_text = re.sub(r"\s+", " ", text)
         clean_text = re.sub(r"\[[0-9]*\]", " ", clean_text)
-        clean_text = re.sub(r"[^a-zA-Z-]", " ", clean_text)
+        clean_text = re.sub(r"[^a-zA-Z0-9.,!?-]", " ", clean_text)
 
         # Try normal sentence tokenization first
         sentences = sent_tokenize(text)
@@ -68,7 +68,8 @@ def summarize_text(text: str, num_sentences: int = 5) -> str:
             words = text.split()
             chunk_size = 25
             sentences = [
-                " ".join(words[i:i + chunk_size]) for i in range(0, len(words), chunk_size)
+                " ".join(words[i:i + chunk_size]).strip() + "."
+                for i in range(0, len(words), chunk_size)
             ]
 
         if len(sentences) <= num_sentences:
@@ -124,7 +125,7 @@ def summarize_text(text: str, num_sentences: int = 5) -> str:
         summary_sentences = heapq.nlargest(
             num_sentences, sentence_scores, key=sentence_scores.get)
 
-        summary = " ".join(summary_sentences)
+        summary = " ".join(sentence.strip() for sentence in summary_sentences)
         return summary
 
     except LookupError as e:
