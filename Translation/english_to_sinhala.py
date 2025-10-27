@@ -6,9 +6,6 @@ Uses the 'thilina/mt5-sinhalese-english' model from Hugging Face Transformers.
 import sys
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-# --- Module-level globals ---
-# We define them as None initially.
-# They will be loaded by _load_model() on the first function call.
 model = None
 tokenizer = None
 model_name = "thilina/mt5-sinhalese-english"
@@ -94,15 +91,50 @@ def translate_en_to_si(text_to_translate: str) -> str:
         return ""
 
 
-# --- Example Usage ---
 # if __name__ == "__main__":
-#     english_text = "Hansaka is a fucking playboy and a foolish man."
-# 
-#     print(f"\nTranslating text...")
-#     print(f"English: {english_text}")
-# 
-#     # Get the translation
-#     # This will trigger the model download on the first run
-#     sinhala_translation = translate_en_to_si(english_text)
-# 
-#     print(f"Sinhala: {sinhala_translation}")
+#     """
+#     Main execution block to test the translation module.
+#     This code only runs when the script is executed directly.
+#     """
+#     print("=== English-to-Sinhala Translation Test ===")
+
+#     # --- Test Case 1 ---
+#     text_1 = "Hello, how are you today?"
+#     print(f"\nTesting with: '{text_1}'")
+    
+#     try:
+#         # The first call will trigger the model loading
+#         translation_1 = translate_en_to_si(text_1)
+#         print(f"English: {text_1}")
+#         print(f"Sinhala: {translation_1}")
+
+#     except Exception as e:
+#         print(f"Translation failed for Test 1: {e}", file=sys.stderr)
+#         sys.exit(1) # Exit if the model failed to load
+
+#     # --- Test Case 2 ---
+#     text_2 = "My name is Gemini and I am a large language model."
+#     print(f"\nTesting with: '{text_2}'")
+    
+#     try:
+#         # This call should be fast as the model is already loaded
+#         translation_2 = translate_en_to_si(text_2)
+#         print(f"English: {text_2}")
+#         print(f"Sinhala: {translation_2}")
+        
+#     except Exception as e:
+#         print(f"Translation failed for Test 2: {e}", file=sys.stderr)
+
+#     # --- Test Case 3 (Empty String) ---
+#     text_3 = "   " # Test with whitespace only
+#     print(f"\nTesting with whitespace: '{text_3}'")
+    
+#     try:
+#         translation_3 = translate_en_to_si(text_3)
+#         print(f"English: '{text_3}'")
+#         print(f"Sinhala: '{translation_3}'  <-- (Should be empty)")
+        
+#     except Exception as e:
+#         print(f"Translation failed for Test 3: {e}", file=sys.stderr)
+
+#     print("\n=== Translation Test Complete ===")

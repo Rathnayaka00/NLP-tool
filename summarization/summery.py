@@ -137,7 +137,7 @@ def summarize_text(text: str, num_sentences: int = 5) -> str:
         return ""
 
 
-# Example usage
+
 # if __name__ == "__main__":
 #     test_text = """
 #     Machine learning, a cornerstone of modern artificial intelligence,
