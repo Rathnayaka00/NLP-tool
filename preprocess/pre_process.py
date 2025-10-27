@@ -6,12 +6,23 @@ from nltk.stem import WordNetLemmatizer
 def download_nltk_data():
 
     print("Initializing NLTK data...")
-    required_packages = ['punkt', 'punkt_tab', 'stopwords', 'wordnet', 'omw-1.4']
+    # Include both legacy and language-specific taggers to support NLTK >= 3.8
+    required_packages = [
+        'punkt',
+        'punkt_tab',
+        'stopwords',
+        'wordnet',
+        'omw-1.4',
+        'averaged_perceptron_tagger',           # legacy name
+        'averaged_perceptron_tagger_eng'        # new name in newer NLTK
+    ]
     
     for package in required_packages:
         try:
-            if package == 'punkt' or package == 'punkt_tab':
+            if package in ['punkt', 'punkt_tab']:
                 nltk.data.find(f'tokenizers/{package}')
+            elif package in ['averaged_perceptron_tagger', 'averaged_perceptron_tagger_eng']:
+                nltk.data.find(f'taggers/{package}')
             else:
                 nltk.data.find(f'corpora/{package}')
             print(f"NLTK package '{package}' is already downloaded.")

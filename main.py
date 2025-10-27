@@ -6,6 +6,7 @@ import warnings
 from pathlib import Path
 from typing import Union
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import run_in_threadpool
 
 try:
@@ -26,6 +27,15 @@ from summarization.summery import summarize_text
 from Translation.english_to_sinhala import translate_en_to_si
 
 app = FastAPI(title="NLP Tool API", version="1.0.0")
+
+# Enable CORS for local UI development and general access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Consider restricting in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 def startup_event():
